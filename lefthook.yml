@@ -1,10 +1,10 @@
 pre-commit:
   commands:
     lint:
-      run: pnpm oxlint --no-error-on-unmatched-pattern {staged_files}
+      run: pnpm oxlint --fix --no-error-on-unmatched-pattern {staged_files}
       stage_fixed: true
     fmt:
-      run: pnpm oxfmt --no-error-on-unmatched-pattern {staged_files}
+      run: pnpm oxfmt --write --no-error-on-unmatched-pattern {staged_files}
       stage_fixed: true
     build:
       run: pnpm build
