@@ -7,6 +7,5 @@
   "options": {
     "typeAware": true,
     "typeCheck": true
-  },
-  "ignorePatterns": ["**/generated"]
+  }
 }

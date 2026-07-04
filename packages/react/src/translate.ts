@@ -14,7 +14,9 @@ export function translate<Key extends MessageKey>(
   if (typeof message === 'function') return message(values)
 
   if (typeof message === 'string' && values && !!Object.keys(values).length) {
-    let translateFn = translateFnCache.get(key)
+    const cacheKey = `${key}\0${message}`
+
+    let translateFn = translateFnCache.get(cacheKey)
 
     if (!translateFn) {
       translateFn = (p) => {
@@ -23,7 +25,7 @@ export function translate<Key extends MessageKey>(
         })
       }
 
-      translateFnCache.set(key, translateFn)
+      translateFnCache.set(cacheKey, translateFn)
     }
 
     return translateFn(values)

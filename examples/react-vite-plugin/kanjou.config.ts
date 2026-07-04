@@ -1,6 +1,6 @@
 import { defineConfig } from '@kanjou/config'
 
 export default defineConfig({
-  sourceLocalePath: 'src/locales/en.json',
+  sourceLocalePath: 'src/assets/locales/en.json',
   outputDirectory: 'generated',
 })
