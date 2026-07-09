@@ -54,7 +54,7 @@ export async function generateLocaleModules(sourceLocalePath: string): Promise<s
 
     const modules = locales.map((locale) => `  ${locale}: () => import('virtual:kanjou/${locale}')`)
 
-    return `const localeModules = {\n${modules.join(',\n')}\n}\nexport default localeModules`
+    return `export default {\n${modules.join(',\n')}\n}`
   } catch (error) {
     consola.error('[@kanjou/vite] Failed to generate locale modules', error)
   }
