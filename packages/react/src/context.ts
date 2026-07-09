@@ -1,12 +1,11 @@
+import type { Messages, Locale } from './types'
 import type { Context } from 'react'
 
 import { createContext } from 'react'
 
-import type { InternalMessages, Locale } from './types'
-
 export interface I18nContextValue {
   locale: Locale
-  messages: InternalMessages
+  messages: Messages
 }
 
 export const I18nContext: Context<I18nContextValue> = createContext({

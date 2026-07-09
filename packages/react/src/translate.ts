@@ -1,6 +1,6 @@
-import type { InternalMessages, Locale, MessageValues } from './types'
+import type { Messages, Locale, MessageValues } from './types'
 
-export type Translate = <Key extends keyof InternalMessages>(
+export type Translate = <Key extends keyof Messages>(
   key: Key,
   values?: MessageValues<Key>,
 ) => string
@@ -9,7 +9,7 @@ export function createTranslate(
   intlCache: Map<string, Intl.PluralRules>,
   translateFnCache: Map<string, (p: Record<string, any>) => string>,
 ) {
-  return <Key extends keyof InternalMessages>(
+  return <Key extends keyof Messages>(
     messages: Record<string, any>,
     locale: Locale,
     key: Key,

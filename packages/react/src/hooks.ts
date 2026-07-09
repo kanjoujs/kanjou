@@ -1,7 +1,7 @@
-import { use } from 'react'
-
 import type { Translate } from './translate'
 import type { Locale } from './types'
+
+import { use } from 'react'
 
 import { I18nContext } from './context'
 import { createTranslate } from './translate'

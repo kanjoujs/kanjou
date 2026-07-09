@@ -17,41 +17,38 @@ export async function generateLocalesDts(config: UserConfig) {
   try {
     const localeFilesDir = path.dirname(config.sourceLocalePath)
     const localeFiles = await fs.readdir(localeFilesDir)
-    const locales = localeFiles
-      .map((file) => `    ${path.basename(file, '.json')}: true`)
-      .join('\n')
+
+    const localeType = localeFiles.map((file) => path.basename(file, '.json')).join(' | ')
 
     const raw = await fs.readFile(config.sourceLocalePath)
     const messagesRaw: Record<string, string | Record<Intl.LDMLPluralRule, string>> = JSON.parse(
       raw.toString(),
     )
 
-    const messages = Object.entries(messagesRaw)
+    const messagesType = Object.entries(messagesRaw)
       .map(([key, value]) => {
         if (typeof value === 'string' && isParameterizedRegex.test(value)) {
           const matches = Array.from(value.matchAll(extractParamsRegex))
-          return `    ${key}: ${matches.map((match) => `"${match.groups?.key}"`).join(' | ')}`
+          return `      ${key}: ${matches.map((match) => `"${match.groups?.key}"`).join(' | ')}`
         }
 
         if (typeof value === 'object') {
           const matches = Array.from(Object.values(value)[0].matchAll(extractParamsRegex))
-          return `    ${key}: ${matches.map((match) => `"${match.groups?.key}"`).join(' | ')}`
+          return `      ${key}: ${matches.map((match) => `"${match.groups?.key}"`).join(' | ')}`
         }
 
         return ''
       })
 
       .join('\n')
-    const content = `/* eslint-disable */
-export {}
+    const content = `export {}
 
 declare module '@kanjou/react' {
-  export interface Locales {
-${locales}
-  }
-
-  export interface Messages {
-${messages}
+  export interface Register {
+    locale: ${localeType}
+    messages: {
+${messagesType}
+    }
   }
 }`
 
@@ -62,8 +59,7 @@ ${messages}
   }
 }
 
-const virtualDtsContent = `/* eslint-disable */
-declare module 'virtual:kanjou/*' {
+const virtualDtsContent = `declare module 'virtual:kanjou/*' {
   const messages: Partial<import('@kanjou/react').Messages>
   export default messages
 }

@@ -1,9 +1,9 @@
+import type { Locale } from './intl-context'
+
 import { useI18n } from '@kanjou/react'
 import { use } from 'react'
 
 import { loadLocale } from '#/utils'
-
-import type { Locale } from './intl-context'
 
 import { IntlContext } from './intl-context'
 
@@ -18,7 +18,7 @@ export function useIntl() {
   }
 
   return {
-    t: t as any,
+    t,
     locale: context.locale,
     setLocale,
   }

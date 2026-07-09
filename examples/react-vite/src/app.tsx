@@ -1,6 +1,6 @@
-import { useState } from 'react'
-
 import type { Locale } from '#/providers/intl-provider'
+
+import { useState } from 'react'
 
 import { useIntl } from '#/providers/intl-provider'
 

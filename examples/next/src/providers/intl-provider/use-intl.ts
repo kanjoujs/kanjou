@@ -1,12 +1,12 @@
 'use client'
 
+import type { Locale } from './intl-context'
+
 import { useI18n } from '@kanjou/react'
 import { useRouter } from 'next/navigation'
 import { use } from 'react'
 
 import { loadLocale } from '@/src/utils'
-
-import type { Locale } from './intl-context'
 
 import { IntlContext } from './intl-context'
 

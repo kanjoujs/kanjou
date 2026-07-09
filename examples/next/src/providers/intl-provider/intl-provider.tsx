@@ -1,11 +1,10 @@
 'use client'
 
+import type { Locale } from './intl-context'
 import type { ReactNode } from 'react'
 
 import { I18nProvider } from '@kanjou/react'
 import { useState } from 'react'
-
-import type { Locale } from './intl-context'
 
 import { IntlContext } from './intl-context'
 
@@ -33,8 +32,10 @@ export function IntlProvider({
 
 // im gonna create cli tool soon for those who cant use vite plugin
 declare module '@kanjou/react' {
-  export interface Messages {
-    greet: 'name'
-    apples: 'count'
+  export interface Register {
+    messages: {
+      greet: 'name'
+      apples: 'count'
+    }
   }
 }
