@@ -1,15 +1,19 @@
 'use client'
 
+import { useI18n } from '@kanjou/react'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-import { Locale, useIntl } from '@/src/providers/intl-provider'
-
 export function ClientComponent() {
-  const { t, locale, setLocale } = useIntl()
+  const router = useRouter()
+
+  const { t, locale } = useI18n()
+
   const [count, setCount] = useState(1)
 
-  const handleLocaleChange = async (newLocale: string) => {
-    await setLocale(newLocale as Locale)
+  const handleLocaleChange = (newLocale: string) => {
+    document.cookie = `kanjou_locale=${newLocale}; path=/; max-age=31536000`
+    router.refresh()
   }
 
   return (
@@ -19,8 +23,8 @@ export function ClientComponent() {
       <div>
         <p>{t('apples', { count })}</p>
         <div>
-          <button onClick={() => setCount((c) => Math.max(0, c - 1))}>-</button>
-          <button onClick={() => setCount((c) => c + 1)}>+</button>
+          <button onClick={() => setCount(Math.max(0, count - 1))}>-</button>
+          <button onClick={() => setCount(count + 1)}>+</button>
         </div>
       </div>
 

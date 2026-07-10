@@ -9,7 +9,4 @@ export interface I18nContextValue {
   messages: Messages
 }
 
-export const I18nContext: Context<I18nContextValue> = createContext({
-  locale: '',
-  messages: {},
-})
+export const I18nContext: Context<I18nContextValue> = createContext({ locale: '', messages: {} })

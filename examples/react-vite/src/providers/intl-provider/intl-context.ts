@@ -1,12 +1,12 @@
-import { createContext } from 'react'
+import type { Locale, Messages } from '@kanjou/react'
 
-export type Locale = 'en' | 'es' | 'fr'
+import { createContext } from 'react'
 
 export interface IntlContextValue {
   locale: Locale
   setLocale: (locale: Locale) => void
-  messages: Record<string, any>
-  setMessages: (messages: Record<string, any>) => void
+  messages: Messages
+  setMessages: (messages: Messages) => void
 }
 
 export const IntlContext = createContext<IntlContextValue>(null!)

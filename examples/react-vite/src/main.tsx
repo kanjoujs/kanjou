@@ -1,14 +1,16 @@
+import type { InferMessages } from '@kanjou/react'
+
 import { createRoot } from 'react-dom/client'
 
 import { App } from '#/app'
+import en from '#/assets/locales/en'
 import { IntlProvider } from '#/providers/intl-provider'
 import { loadLocale } from '#/utils'
 
-// im gonna create cli tool soon for those who cant use vite plugin
 declare module '@kanjou/react' {
-  export interface Messages {
-    greet: 'name'
-    apples: 'count'
+  export interface Register {
+    locale: 'en' | 'es' | 'fr'
+    messages: InferMessages<typeof en>
   }
 }
 
