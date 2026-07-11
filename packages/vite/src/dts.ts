@@ -27,6 +27,8 @@ export async function generateLocalesDts(config: UserConfig) {
 
     const messagesType = Object.entries(messagesRaw)
       .map(([key, value]) => {
+        key = JSON.stringify(key)
+
         if (typeof value === 'string' && isParameterizedRegex.test(value)) {
           const matches = Array.from(value.matchAll(extractParamsRegex))
           return `      ${key}: ${matches.map((match) => `"${match.groups?.key}"`).join(' | ')}`
@@ -37,10 +39,12 @@ export async function generateLocalesDts(config: UserConfig) {
           return `      ${key}: ${matches.map((match) => `"${match.groups?.key}"`).join(' | ')}`
         }
 
+        if (typeof value === 'string') return `      ${key}: undefined`
+
         return ''
       })
-
       .join('\n')
+
     const content = `export {}
 
 declare module '@kanjou/react' {
@@ -65,7 +69,7 @@ const virtualDtsContent = `declare module 'virtual:kanjou/*' {
 }
 
 declare module 'virtual:kanjou/modules' {
-  const modules: Record<import('@kanjou/react').Locale, () => Promise<{ default: Record<string, any> }>>
+  const modules: Record<import('@kanjou/react').Locale, () => Promise<{ default: import('@kanjou/react').Messages }>>
   export default modules
 }`
 

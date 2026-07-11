@@ -1,7 +1,7 @@
 import type { Messages, Locale, MessageValues } from './types'
 
 export type Translate = <Key extends keyof Messages>(
-  key: Key,
+  key: Key | (string & {}),
   values?: MessageValues<Key>,
 ) => string
 
