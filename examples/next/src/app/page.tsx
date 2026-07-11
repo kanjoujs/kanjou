@@ -8,10 +8,10 @@ import { ClientComponent } from './client-component'
 
 export default async function Home() {
   const cookieStore = await cookies()
-  const locale = (cookieStore.get('kanjou_locale')?.value || 'en') as Locale
+  const locale = (cookieStore.get('kanjou_locale')?.value ?? 'en') as Locale
   const messages = await loadLocale(locale)
 
-  const { t } = await createI18n({ messages, locale })
+  const { t } = createI18n({ messages, locale })
 
   return (
     <main>

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const cookieStore = await cookies()
-  const initialLocale = (cookieStore.get('kanjou_locale')?.value || 'en') as Locale
+  const initialLocale = (cookieStore.get('kanjou_locale')?.value ?? 'en') as Locale
   const initialMessages = await loadLocale(initialLocale)
 
   return (

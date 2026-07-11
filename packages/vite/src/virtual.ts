@@ -19,7 +19,7 @@ export async function generateLocaleMessages(
     const entries = Object.entries(messages).map(([rawKey, value]) => {
       const key = JSON.stringify(rawKey)
 
-      if (value && typeof value === 'object') {
+      if (typeof value === 'object') {
         hasPlural = true
 
         const cases = Object.entries(value)
@@ -29,13 +29,13 @@ export async function generateLocaleMessages(
           })
           .join('\n')
 
-        return `  ${key}: (p = {}) => {\n    switch (${locale}Plural.select(p.count ?? 0)) {\n${cases}\n      default: return ''\n    }\n  }`
+        return `  ${key}: (p) => {\n    switch (${locale}Plural.select(p.count ?? 0)) {\n${cases}\n      default: return ''\n    }\n  }`
       }
 
       if (!isParameterizedRegex.test(value)) return `  ${key}: ${JSON.stringify(value)}`
 
       const template = value.replace(extractParamsRegex, (_, param) => `\${p.${param}}`)
-      return `  ${key}: (p = {}) => \`${template}\``
+      return `  ${key}: (p) => \`${template}\``
     })
 
     const header = hasPlural ? `const ${locale}Plural = new Intl.PluralRules('${locale}')\n\n` : ''

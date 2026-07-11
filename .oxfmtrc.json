@@ -1,7 +1,8 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "singleQuote": true,
   "semi": false,
+  "singleQuote": true,
+  "quoteProps": "consistent",
   "sortImports": {
     "groups": [
       ["type-builtin", "type-external"],
@@ -12,5 +13,6 @@
       ["value-parent", "value-sibling", "value-index"],
       "unknown"
     ]
-  }
+  },
+  "ignorePatterns": ["next-env.d.ts"]
 }

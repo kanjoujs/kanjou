@@ -1,11 +1,43 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["eslint", "oxc", "typescript", "unicorn", "import"],
+  "plugins": ["oxc", "typescript", "unicorn", "import"],
+  "categories": { "perf": "error", "correctness": "error" },
   "rules": {
-    "import/consistent-type-specifier-style": ["error", "prefer-top-level"]
+    // its still unfinished
+    "eslint/no-useless-assignment": "error",
+    "eslint/array-callback-return": "error",
+    "eslint/max-classes-per-file": "error",
+    "eslint/eqeqeq": "error",
+    "eslint/no-useless-return": "error",
+    "eslint/yoda": "error",
+
+    "oxc/branches-sharing-code": "error",
+
+    "typescript/prefer-includes": "error",
+    "typescript/prefer-nullish-coalescing": "error",
+    "typescript/require-await": "error",
+    "typescript/switch-exhaustiveness-check": "error",
+
+    "unicorn/no-negation-in-equality-check": "error",
+    "unicorn/prefer-array-some": "error",
+    "unicorn/prefer-array-find": "error",
+    "unicorn/prefer-at": "error",
+    "unicorn/prefer-date-now": "error",
+    "unicorn/prefer-import-meta-properties": "error",
+    "unicorn/prefer-math-min-max": "error",
+    "unicorn/prefer-regexp-test": "error",
+    "unicorn/prefer-top-level-await": "error",
+    "unicorn/prefer-array-flat-map": "error",
+    "unicorn/prefer-set-has": "error",
+    "unicorn/import-style": "error",
+    "unicorn/prefer-node-protocol": "error",
+
+    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+
+    // nursery
+    "typescript/prefer-optional-chain": "error"
   },
-  "options": {
-    "typeAware": true,
-    "typeCheck": true
-  }
+  "options": { "typeAware": true, "typeCheck": true },
+  "env": { "builtin": true },
+  "ignorePatterns": ["next-env.d.ts"]
 }
