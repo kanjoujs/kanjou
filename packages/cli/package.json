@@ -4,7 +4,7 @@
   "private": false,
   "license": "ISC",
   "author": "Ivan Popov <iivanpopov@proton.me>",
-  "repository": "https://github.com/kanjoujs/kanjou.git",
+  "repository": "https://github.com/iivanpopov/kanjou.git",
   "files": [
     "dist",
     "README.md",
