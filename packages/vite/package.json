@@ -1,9 +1,9 @@
 {
   "name": "@kanjou/vite",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "private": false,
   "license": "ISC",
-  "author": "Ivan Popov",
+  "author": "Ivan Popov <iivanpopov@proton.me>",
   "repository": "https://github.com/kanjoujs/kanjou.git",
   "files": [
     "dist",

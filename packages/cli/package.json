@@ -1,9 +1,9 @@
 {
   "name": "@kanjou/cli",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "private": false,
   "license": "ISC",
-  "author": "Ivan Popov",
+  "author": "Ivan Popov <iivanpopov@proton.me>",
   "repository": "https://github.com/kanjoujs/kanjou.git",
   "files": [
     "dist",
