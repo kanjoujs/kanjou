@@ -10,18 +10,18 @@ export type MessageValues<Key extends keyof Messages> = Record<
   string | number
 >
 
-type ExtractParams<S extends string> = S extends `${string}{${infer Param}}${infer Rest}`
+type ExtractParams<String extends string> = String extends `${string}{${infer Param}}${infer Rest}`
   ? Param | ExtractParams<Rest>
   : never
 
-type ResolveMessage<V> = V extends string
-  ? [ExtractParams<V>] extends [never]
+type ResolveMessage<Value> = Value extends string
+  ? [ExtractParams<Value>] extends [never]
     ? undefined
-    : ExtractParams<V>
-  : V extends Record<Intl.LDMLPluralRule, string>
-    ? ResolveMessage<V[keyof V]>
+    : ExtractParams<Value>
+  : Value extends Record<Intl.LDMLPluralRule, string>
+    ? ResolveMessage<Value[keyof Value]>
     : undefined
 
-export type InferMessages<T extends Record<string, unknown>> = {
-  [K in keyof T]: ResolveMessage<T[K]>
+export type InferMessages<Messages extends Record<string, unknown>> = {
+  [Key in keyof Messages]: ResolveMessage<Messages[Key]>
 }
