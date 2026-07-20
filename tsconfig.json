@@ -15,7 +15,7 @@
       "@kanjou/react": ["./packages/react/src/index.ts"],
       "@kanjou/react/server": ["./packages/react/src/server.ts"],
       "@kanjou/vite": ["./packages/vite/src/index.ts"],
-      "@kanjou/cli": ["./packages/cli/src/cli.ts"],
+      "@kanjou/cli": ["./packages/cli/src/index.ts"],
       "#/shared/*": ["./shared/src/*"]
     }
   },

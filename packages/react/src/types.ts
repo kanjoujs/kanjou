@@ -1,5 +1,3 @@
-export type Message = undefined | string | Record<Intl.LDMLPluralRule, string>
-
 export interface Register {}
 
 export type Locale = Register extends { locale: infer L } ? L : string

@@ -2,59 +2,62 @@ import consola from 'consola'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-const extractParamsRegex = /\{(?<key>[^}]+)\}/g
-const isParameterizedRegex = /\{[^}]+\}/
+import type { Message } from '#/shared/types'
+
+import { HAS_PARAM_REGEX, PARAM_REGEX } from '#/shared/constants'
 
 export async function generateLocaleMessages(
-  sourceLocalePath: string,
+  sourceLocale: string,
   locale: string,
 ): Promise<string | undefined> {
   try {
-    const localeFilePath = path.join(path.dirname(sourceLocalePath), `${locale}.json`)
-    const raw = await fs.readFile(localeFilePath, 'utf-8')
-    const messages: Record<string, string | Record<Intl.LDMLPluralRule, string>> = JSON.parse(raw)
+    const dir = path.dirname(sourceLocale)
+    const localeFilePath = path.join(dir, `${locale}.json`)
+    const messagesRaw = await fs.readFile(localeFilePath, 'utf-8')
+    const messages: Record<string, Message> = JSON.parse(messagesRaw)
 
-    let hasPlural = false
+    const hasPlural = Object.values(messages).some((value) => typeof value === 'object')
 
-    const entries = Object.entries(messages).map(([rawKey, value]) => {
-      const key = JSON.stringify(rawKey)
+    const lines: string[] = []
 
+    if (hasPlural) lines.push(`const ${locale}p = new Intl.PluralRules("${locale}")`)
+
+    const entries = Object.entries(messages).map(([key, value]) => {
       if (typeof value === 'object') {
-        hasPlural = true
-
         const cases = Object.entries(value)
           .map(([pluralCase, text]) => {
-            const body = text.replace(extractParamsRegex, (_, param) => `\${p.${param}}`)
-            return `      case ${JSON.stringify(pluralCase)}: return \`${body}\``
+            const body = text.replace(PARAM_REGEX, (_, param) => `\${p[${JSON.stringify(param)}]}`)
+            return `    case "${pluralCase}": return \`${body}\``
           })
           .join('\n')
-
-        return `  ${key}: (p) => {\n    switch (${locale}Plural.select(p.count ?? 0)) {\n${cases}\n      default: return ''\n    }\n  }`
+        return `  ${JSON.stringify(key)}(p) {\n    switch (${locale}p.select(p.count)) {\n${cases}\n    }\n  }`
       }
 
-      if (!isParameterizedRegex.test(value)) return `  ${key}: ${JSON.stringify(value)}`
+      if (!HAS_PARAM_REGEX.test(value)) return `  ${JSON.stringify(key)}: ${JSON.stringify(value)}`
 
-      const template = value.replace(extractParamsRegex, (_, param) => `\${p.${param}}`)
-      return `  ${key}: (p) => \`${template}\``
+      const template = value.replace(PARAM_REGEX, (_, param) => `\${p[${JSON.stringify(param)}]}`)
+      return `  ${JSON.stringify(key)}: (p) => \`${template}\``
     })
 
-    const header = hasPlural ? `const ${locale}Plural = new Intl.PluralRules('${locale}')\n\n` : ''
+    lines.push(`export default {\n${entries.join(',\n')}\n}`)
 
-    return `${header}export default {\n${entries.join(',\n')}\n}\n`
+    return lines.join('\n')
   } catch (error) {
     consola.error('[@kanjou/vite] Failed to load locale', error)
   }
 }
 
-export async function generateLocaleModules(sourceLocalePath: string): Promise<string | undefined> {
+export async function generateLocaleModules(sourceLocale: string): Promise<string | undefined> {
   try {
-    const localeFilesDir = path.dirname(sourceLocalePath)
-    const localeFiles = await fs.readdir(localeFilesDir)
+    const dir = path.dirname(sourceLocale)
+    const localeFiles = await fs.readdir(dir)
     const locales = localeFiles.map((file) => path.basename(file, '.json'))
 
-    const modules = locales.map((locale) => `  ${locale}: () => import('virtual:kanjou/${locale}')`)
+    const entries = locales.map(
+      (locale) => `  "${locale}": () => import('virtual:kanjou/${locale}')`,
+    )
 
-    return `export default {\n${modules.join(',\n')}\n}`
+    return `export default {\n${entries.join(',\n')}\n}`
   } catch (error) {
     consola.error('[@kanjou/vite] Failed to generate locale modules', error)
   }

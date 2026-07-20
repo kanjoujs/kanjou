@@ -1,12 +1,12 @@
 {
   "name": "@kanjou/cli",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "private": false,
   "license": "ISC",
   "author": "Ivan Popov <iivanpopov@proton.me>",
   "repository": "https://github.com/iivanpopov/kanjou.git",
   "bin": {
-    "kanjou": "./dist/cli.js"
+    "kanjou": "./dist/cli.mjs"
   },
   "files": [
     "dist",
@@ -25,10 +25,15 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@kanjou/config": "workspace:*"
+    "@kanjou/config": "workspace:*",
+    "cac": "^7.0.0",
+    "consola": "catalog:"
   },
   "devDependencies": {
     "tsdown": "catalog:tooling",
+    "typescript": "catalog:tooling"
+  },
+  "peerDependencies": {
     "typescript": "catalog:tooling"
   }
 }
