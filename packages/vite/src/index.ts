@@ -67,7 +67,7 @@ export function kanjou(config?: UserConfig): Plugin {
 
       const messages = await readLocaleFile(localeFile)
 
-      if (messages) return compileAst(messages)
+      return compileAst(messages ?? {})
     },
   }
 }

@@ -27,7 +27,16 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "prettier": "catalog:",
     "tsdown": "catalog:tooling",
     "typescript": "catalog:tooling"
+  },
+  "peerDependencies": {
+    "prettier": "catalog:"
+  },
+  "peerDependenciesMeta": {
+    "prettier": {
+      "optional": true
+    }
   }
 }

@@ -1,4 +1,4 @@
-import type { MessageFormatOptions, MessagePart } from 'messageformat'
+import type { MessagePart } from 'messageformat'
 
 import { MessageFormat } from 'messageformat'
 
@@ -6,24 +6,24 @@ import type {
   Locale,
   Message,
   MessageKey,
-  RegisteredMessageType,
-  MessageValue,
   MessageValues,
-  RegisteredPartType,
+  MessageFormatOptions,
+  InferPartsType,
 } from './types'
 
-export interface TranslateToParts<PartType extends string = RegisteredPartType> {
-  <Key extends MessageKey>(key: Key, values?: MessageValues<Key>): MessagePart<PartType>[]
-  unsafe: (key: string, values?: Record<string, MessageValue>) => MessagePart<PartType>[]
+export interface TranslateParts {
+  <Key extends MessageKey>(
+    key: Key,
+    values?: MessageValues<Key>,
+  ): MessagePart<InferPartsType<Key>>[]
+  unsafe: (key: any, values?: Record<string, any>) => MessagePart<string>[]
 }
 
-export interface Translate<
-  _MessageType extends string = RegisteredMessageType,
-  PartType extends string = RegisteredPartType,
-> {
+export interface Translate {
   <Key extends MessageKey>(key: Key, values?: MessageValues<Key>): string
-  unsafe: (key: string, values?: Record<string, MessageValue>) => string
-  parts: TranslateToParts<PartType>
+  unsafe: (key: any, values?: Record<string, any>) => string
+
+  parts: TranslateParts
 }
 
 const cache: Map<string, MessageFormat<string, string>> = new Map()
@@ -33,64 +33,48 @@ function translate<Key extends MessageKey>(
   locale: Locale,
   key: Key,
   values?: MessageValues<Key>,
-  options?: MessageFormatOptions<string, string>,
-  ignoreCache?: boolean,
+  options?: MessageFormatOptions,
 ): string {
   const message = messages[key]
   if (!message) return key
 
-  if (ignoreCache) return new MessageFormat(locale, message, options).format(values)
-
   const formatter = cache.getOrInsert(
     `${locale}:${key}`,
-    new MessageFormat(locale, message, options),
+    new MessageFormat(locale, message, options as any),
   )
 
   return formatter.format(values)
 }
 
-function translateToParts<Key extends MessageKey, PartType extends string = RegisteredPartType>(
+function translateToParts<Key extends MessageKey>(
   messages: Record<string, Message>,
   locale: Locale,
   key: Key,
   values?: MessageValues<Key>,
-  options?: MessageFormatOptions<string, string>,
-  ignoreCache?: boolean,
-): MessagePart<PartType>[] {
+  options?: MessageFormatOptions,
+): MessagePart<InferPartsType<Key>>[] {
   const message = messages[key]
   if (!message) return [{ type: 'text', value: key }]
 
-  if (ignoreCache) {
-    return new MessageFormat(locale, message, options).formatToParts(
-      values,
-    ) as MessagePart<PartType>[]
-  }
-
   const formatter = cache.getOrInsert(
     `${locale}:${key}`,
-    new MessageFormat(locale, message, options),
+    new MessageFormat(locale, message, options as any),
   )
 
-  return formatter.formatToParts(values) as MessagePart<PartType>[]
+  return formatter.formatToParts(values) as MessagePart<InferPartsType<Key>>[]
 }
 
-export function createTranslate<
-  MessageType extends string = RegisteredMessageType,
-  PartType extends string = RegisteredPartType,
->(
+export function createTranslate(
   messages: Record<string, Message>,
   locale: Locale,
-  options?: MessageFormatOptions<string, string>,
-  ignoreCache: boolean = false,
-): Translate<MessageType, PartType> {
-  const t: Translate<MessageType, PartType> = (key, values) =>
-    translate(messages, locale, key, values, options, ignoreCache)
-  t.unsafe = (key, values) => translate(messages, locale, key, values, options, ignoreCache)
+  options?: MessageFormatOptions,
+): Translate {
+  const t: Translate = (key, values) => translate(messages, locale, key, values, options)
+  t.unsafe = (key, values) => translate(messages, locale, key, values, options)
 
-  const parts: TranslateToParts<PartType> = (key, values) =>
-    translateToParts(messages, locale, key, values, options, ignoreCache)
-  parts.unsafe = (key, values) =>
-    translateToParts(messages, locale, key, values, options, ignoreCache)
+  const parts: TranslateParts = (key, values) =>
+    translateToParts(messages, locale, key, values, options)
+  parts.unsafe = (key, values) => translateToParts(messages, locale, key, values, options)
 
   t.parts = parts
 

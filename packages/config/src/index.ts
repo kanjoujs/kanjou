@@ -1,3 +1,4 @@
+import type { Options as PrettierOptions } from 'prettier'
 import type { LoadConfigResult } from 'unconfig'
 
 import consola from 'consola'
@@ -5,6 +6,7 @@ import { createConfigLoader as createLoader } from 'unconfig'
 
 export interface UserConfig {
   sourceLocale: string
+  format?: boolean | PrettierOptions
   dts?: {
     outDir?: string
     localesPath?: string
